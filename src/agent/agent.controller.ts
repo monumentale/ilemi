@@ -9,7 +9,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { AgentService } from './agent.service';
-import { CreateAgentDto } from './dto/Agent.dto';
+import { CreateAgentDto } from './dto/agent.dto';
 import { UpdatePasswordDTO } from 'src/utils/utils.types';
 import { OTPUserDTO } from 'src/auth/dto/auth.dto';
 
