@@ -40,6 +40,38 @@ export class AgentDto {
   
     @ApiProperty()
     AdmimVerificationStatus: boolean;
+
+    @ApiProperty({
+        required: true,
+        default: {
+          Jan: 0,
+          Feb: 0,
+          Mar: 0,
+          Apr: 0,
+          May: 0,
+          Jun: 0,
+          Jul: 0,
+          Aug: 0,
+          Sep: 0,
+          Oct: 0,
+          Nov: 0,
+          Dec: 0,
+        },
+      })
+      PropertyDataCount?: {
+        Jan: number;
+        Feb: number;
+        Mar: number;
+        Apr: number;
+        May: number;
+        Jun: number;
+        Jul: number;
+        Aug: number;
+        Sep: number;
+        Oct: number;
+        Nov: number;
+        Dec: number;
+      };
   
     @ApiProperty()
     CreationDate: Date;
