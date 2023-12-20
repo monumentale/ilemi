@@ -2,6 +2,18 @@ import { IsString, IsNumber, IsDate, IsEmail, IsArray, ValidateNested, IsBoolean
 import { Type } from 'class-transformer';
 import { ApiProperty, OmitType, PartialType } from '@nestjs/swagger';
 
+
+export class ChangePasswordDTO {
+    @ApiProperty()
+    userid: string;
+
+    @ApiProperty()
+    newPassword: string;
+
+    @ApiProperty()
+    OldPassword: string;
+}
+
 export class CreateAgentDto {
     @ApiProperty()
     firstName: string;
@@ -19,46 +31,50 @@ export class CreateAgentDto {
 export class AgentDto {
     @ApiProperty()
     firstName: string;
-  
+
     @ApiProperty()
     lastName: string;
-  
+
     @ApiProperty()
     email: string;
-  
+
+    @ApiProperty()
+    phoneNumber: string;
+
+
     @ApiProperty()
     password: string;
-  
+
     @ApiProperty()
     role: string;
-  
+
     @ApiProperty()
     profilePic: string;
-  
+
     @ApiProperty()
     status: boolean;
-  
+
     @ApiProperty()
     AdmimVerificationStatus: boolean;
 
     @ApiProperty({
         required: true,
         default: {
-          Jan: 0,
-          Feb: 0,
-          Mar: 0,
-          Apr: 0,
-          May: 0,
-          Jun: 0,
-          Jul: 0,
-          Aug: 0,
-          Sep: 0,
-          Oct: 0,
-          Nov: 0,
-          Dec: 0,
+            Jan: 0,
+            Feb: 0,
+            Mar: 0,
+            Apr: 0,
+            May: 0,
+            Jun: 0,
+            Jul: 0,
+            Aug: 0,
+            Sep: 0,
+            Oct: 0,
+            Nov: 0,
+            Dec: 0,
         },
-      })
-      PropertyDataCount?: {
+    })
+    PropertyDataCount?: {
         Jan: number;
         Feb: number;
         Mar: number;
@@ -71,14 +87,19 @@ export class AgentDto {
         Oct: number;
         Nov: number;
         Dec: number;
-      };
-  
+    };
+
     @ApiProperty()
     CreationDate: Date;
-  
+
     @ApiProperty()
     uniqueVerificationCode: string;
-  
+
     @ApiProperty()
     uniqueVerificationCodeTimer: Date;
-  }
+}
+
+export class UpdateAgentDto extends AgentDto {
+    // @ApiProperty({ description: 'ID of the agent associated with the property' })
+    // propertyId: string;
+}

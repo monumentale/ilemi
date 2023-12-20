@@ -14,13 +14,14 @@ import { verifyPasswordHash, generateUniqueKey, generateUniqueCode, sendEmail, h
 import mongoose from "mongoose";
 import { Query } from 'express-serve-static-core';
 import { Agent } from './schema/agent.schema';
-import { CreateAgentDto, AgentDto } from './dto/agent.dto';
-import { UpdatePasswordDTO } from 'src/utils/utils.types';
+import { CreateAgentDto, AgentDto, ChangePasswordDTO } from './dto/agent.dto';
+import { BaseResponseTypeDTO, UpdatePasswordDTO } from 'src/utils/utils.types';
+import { Property } from 'src/property/schema/property.schema';
 
 
 @Injectable()
 export class AgentService {
-  constructor(@InjectModel(Agent.name) private AgentModel: Model<Agent>) { }
+  constructor(@InjectModel(Agent.name) private AgentModel: Model<Agent>, @InjectModel(Property.name) private PropertyModel: Model<Property>) { }
 
 
   async create(CreateAgent: CreateAgentDto)
@@ -43,20 +44,20 @@ export class AgentService {
       ...CreateAgent,
       uniqueVerificationCode: verificationCode,
       PropertyDataCount: {
-        Jan:0,
-        Feb:0,
-        Mar:0,
-        Apr:0,
-        May:0,
-        Jun:0,
-        Jul:0,
-        Aug:0,
-        Sep:0,
-        Oct:0,
-        Nov:0,
-        Dec:0,
+        Jan: 0,
+        Feb: 0,
+        Mar: 0,
+        Apr: 0,
+        May: 0,
+        Jun: 0,
+        Jul: 0,
+        Aug: 0,
+        Sep: 0,
+        Oct: 0,
+        Nov: 0,
+        Dec: 0,
       }
-    
+
     };
     const createdEmployer = await new this.AgentModel(partialAgent);
     return await createdEmployer.save();
@@ -97,7 +98,7 @@ export class AgentService {
       if (!mongoose.Types.ObjectId.isValid(userId)) {
         throw new NotFoundException('User is not valid');
       }
-      const data = await this.AgentModel.findOne({ _id: userId }).populate('reviews').exec();
+      const data = await this.AgentModel.findOne({ _id: userId }).exec();
       if (data?.id) {
         return {
           success: true,
@@ -265,7 +266,54 @@ export class AgentService {
     }
   }
 
+  async changePasswordAcc({
+    userid,
+    OldPassword,
+    newPassword,
+  }: ChangePasswordDTO) {
+    try {
+      const userExists = await this.AgentModel.findOne({ _id: userid }).exec();
+      if (userExists?.id) {
+        const doesOldPasswordAlignWithNewpassord = await verifyPasswordHash(
+          OldPassword,
+          userExists.password,
+        );
 
+        if (!doesOldPasswordAlignWithNewpassord) {
+          const message = 'The Old Password Does Not Belong To This Account';
+          throw new ConflictException(message);
+        }
+
+        const doesOldAndNewPasswordMatch = await verifyPasswordHash(
+          newPassword,
+          userExists.password,
+        );
+
+
+        if (doesOldAndNewPasswordMatch) {
+          const message = 'Both old and new password match';
+          throw new ConflictException(message);
+        }
+
+
+        const hashedPassword = await hashPassword(newPassword);
+
+        await this.AgentModel.updateOne(
+          { _id: userExists.id },
+          { $set: { password: hashedPassword } }
+        );
+
+        return {
+          success: true,
+          code: HttpStatus.OK,
+          message: 'Password changed successfully',
+        };
+      }
+      throw new NotFoundException('Invalid verification code');
+    } catch (ex) {
+      throw ex;
+    }
+  }
 
   async updatePropertyDataCount(agentId: string): Promise<Agent> {
     const currentMonth = new Date().toLocaleString('en-US', { month: 'short' });
@@ -284,6 +332,92 @@ export class AgentService {
     } catch (error) {
       throw new NotFoundException(`Failed to update PropertyDataCount: ${error.message}`);
     }
+  }
+
+
+  async update(updateAgentDto: AgentDto): Promise<BaseResponseTypeDTO> {
+    try {
+      if (!updateAgentDto.email) {
+        throw new NotFoundException('Email is required for updating an agent');
+      }
+
+      let agent = await this.AgentModel.findOne({ email: updateAgentDto.email });
+      if (!agent?.id) {
+        throw new NotFoundException('Agent with email not found');
+      }
+
+      // Check and update each agent field if provided in the DTO
+      if (updateAgentDto.firstName && updateAgentDto.firstName !== agent.firstName) {
+        agent.firstName = updateAgentDto.firstName;
+      }
+
+      if (updateAgentDto.lastName && updateAgentDto.lastName !== agent.lastName) {
+        agent.lastName = updateAgentDto.lastName;
+      }
+
+      if (updateAgentDto.phoneNumber && updateAgentDto.phoneNumber !== agent.phoneNumber) {
+        agent.phoneNumber = updateAgentDto.phoneNumber;
+      }
+
+      // if (updateAgentDto.role && updateAgentDto.role !== agent.role) {
+      //   agent.role = updateAgentDto.role;
+      // }
+
+      if (updateAgentDto.profilePic && updateAgentDto.profilePic !== agent.profilePic) {
+        agent.profilePic = updateAgentDto.profilePic;
+      }
+
+      if (updateAgentDto.status !== undefined && updateAgentDto.status !== agent.status) {
+        agent.status = updateAgentDto.status;
+      }
+
+      if (updateAgentDto.AdmimVerificationStatus !== undefined && updateAgentDto.AdmimVerificationStatus !== agent.AdmimVerificationStatus) {
+        agent.AdmimVerificationStatus = updateAgentDto.AdmimVerificationStatus;
+      }
+
+      if (updateAgentDto.PropertyDataCount !== undefined && updateAgentDto.PropertyDataCount !== agent.PropertyDataCount) {
+        agent.PropertyDataCount = updateAgentDto.PropertyDataCount;
+      }
+
+      const savedAgent = await agent.save();
+
+      return {
+        success: true,
+        code: HttpStatus.OK,
+        data: savedAgent,
+        message: 'Agent updated',
+      };
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error;
+      } else {
+        throw new Error(`Error updating agent: ${error.message}`);
+      }
+    }
+  }
+
+
+  async deleteAgentById(id: string): Promise<Agent | null> {
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      throw new NotFoundException('Agent ID is not valid');
+    }
+    // Find the employer to get associated data
+    const agent = await this.AgentModel.findById(id);
+    if (!agent) {
+      throw new NotFoundException(`Agent with ID not found.`);
+    }
+    // Delete related documents based on the agent's data
+    // Assuming there's another model for the related documents, adjust accordingly
+    const deletedJobs = await this.PropertyModel.deleteMany({ AgentId: agent.id });
+    //  const deletedCandidates= await this.JobConnectionModel.deleteMany({ agent: agent.id });
+    //  console.log(deletedCandidates)
+    console.log(deletedJobs)
+    // Now, delete the agent
+    const deletedagent = await this.AgentModel.findByIdAndDelete(id);
+    if (!deletedagent) {
+      throw new NotFoundException(`Agent with ID not found.`);
+    }
+    return deletedagent;
   }
 
 }

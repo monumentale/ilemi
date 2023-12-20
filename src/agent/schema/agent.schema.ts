@@ -15,6 +15,10 @@ export class Agent {
 
   @ApiProperty()
   @Prop({ required: false })
+  phoneNumber: string;
+
+  @ApiProperty()
+  @Prop({ required: false })
   externalUserId: string;
 
   @ApiProperty()
