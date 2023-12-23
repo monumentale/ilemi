@@ -351,6 +351,32 @@ export class AgentService {
         agent.firstName = updateAgentDto.firstName;
       }
 
+      if (updateAgentDto.HouseAddress && updateAgentDto.HouseAddress !== agent.HouseAddress) {
+        agent.HouseAddress = updateAgentDto.HouseAddress;
+      }
+
+      if (updateAgentDto.State && updateAgentDto.State !== agent.State) {
+        agent.State = updateAgentDto.State;
+      }
+
+      if (updateAgentDto.City && updateAgentDto.City !== agent.City) {
+        agent.City = updateAgentDto.City;
+      }
+
+      if (updateAgentDto.WhatsappNumber && updateAgentDto.WhatsappNumber !== agent.WhatsappNumber) {
+        agent.WhatsappNumber = updateAgentDto.WhatsappNumber;
+      }
+
+
+      if (updateAgentDto.NINback && updateAgentDto.NINback !== agent.NINback) {
+        agent.NINback = updateAgentDto.NINback;
+      }
+
+
+      if (updateAgentDto.NINfront && updateAgentDto.NINfront !== agent.NINfront) {
+        agent.NINfront = updateAgentDto.NINfront;
+      }
+
       if (updateAgentDto.lastName && updateAgentDto.lastName !== agent.lastName) {
         agent.lastName = updateAgentDto.lastName;
       }

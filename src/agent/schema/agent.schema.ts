@@ -69,6 +69,48 @@ export class Agent {
   @Prop()
   profilePic: string;
 
+  @ApiProperty()
+  @Prop()
+  HouseAddress: string
+
+  @ApiProperty()
+  @Prop({
+    type: {
+      name: String,
+      url: String,
+    },
+  })
+  NINback: {
+    name: string,
+    url: string
+  };
+
+
+  @ApiProperty()
+  @Prop({
+    type: {
+      name: String,
+      url: String,
+    },
+  })
+  NINfront: {
+    name: string,
+    url: string
+  };
+
+
+  @ApiProperty()
+  @Prop()
+  State: string;
+
+  @ApiProperty()
+  @Prop()
+  City: string;
+
+  @ApiProperty()
+  @Prop()
+  WhatsappNumber: string;
+
 
   @ApiProperty()
   @Prop({ default: false })

@@ -14,6 +14,16 @@ export class ChangePasswordDTO {
     OldPassword: string;
 }
 
+class UploadeImageDto {
+    @ApiProperty()
+    @IsString()
+    name: string;
+
+    @ApiProperty()
+    @IsString()
+    url: string;
+}
+
 export class CreateAgentDto {
     @ApiProperty()
     firstName: string;
@@ -56,6 +66,24 @@ export class AgentDto {
 
     @ApiProperty()
     AdmimVerificationStatus: boolean;
+
+    @ApiProperty()
+    HouseAddress: string;
+  
+    @ApiProperty()
+    State: string;
+  
+    @ApiProperty()
+    City: string;
+
+    @ApiProperty()
+    NINback:UploadeImageDto;
+
+    @ApiProperty()
+    NINfront:UploadeImageDto;
+  
+    @ApiProperty()
+    WhatsappNumber: string;
 
     @ApiProperty({
         required: true,

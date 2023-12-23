@@ -7,6 +7,7 @@ import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { AuthModule } from './auth/auth.module';
 import { AgentModule } from './agent/agent.module';
 import { PropertyModule } from './property/property.module';
+import { TenantModule } from './tenant/tenant.module';
 import * as dotenv from 'dotenv';
 
 
@@ -18,6 +19,7 @@ import * as dotenv from 'dotenv';
     AuthModule,
     AgentModule,
     PropertyModule,
+    TenantModule,
   ],
   controllers: [AppController],
   providers: [AppService],
