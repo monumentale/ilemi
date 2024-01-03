@@ -15,7 +15,7 @@ export class Property {
 
     @ApiProperty()
     @Prop()
-    Property_type: String;
+    Property_Name: String;
 
     @ApiProperty()
     @Prop({ default: 0 })

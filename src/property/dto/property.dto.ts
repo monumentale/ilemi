@@ -10,7 +10,7 @@ export class CreatePropertyDto {
 //   status: boolean;
 
   @ApiProperty({ description: 'Type of property', example: 'House' })
-  Property_type: string;
+  Property_Name: string;
 
   @ApiProperty({ description: 'Vacancy status (0 for Vacant, 1 for Occupied)', example: 0 })
   Vacancy: number;

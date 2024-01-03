@@ -111,8 +111,8 @@ export class PropertyService {
                 property.status = updatePropertyDto.status;
             }
 
-            if (updatePropertyDto.Property_type && updatePropertyDto.Property_type !== property.Property_type) {
-                property.Property_type = updatePropertyDto.Property_type;
+            if (updatePropertyDto.Property_Name && updatePropertyDto.Property_Name !== property.Property_Name) {
+                property.Property_Name = updatePropertyDto.Property_Name;
             }
 
             if (updatePropertyDto.Vacancy !== undefined && updatePropertyDto.Vacancy !== property.Vacancy) {
@@ -154,6 +154,7 @@ export class PropertyService {
             if (updatePropertyDto.PropertyType && updatePropertyDto.PropertyType !== property.PropertyType) {
                 property.PropertyType = updatePropertyDto.PropertyType;
             }
+            
 
             if (updatePropertyDto.BedRooms !== undefined && updatePropertyDto.BedRooms !== property.BedRooms) {
                 property.BedRooms = updatePropertyDto.BedRooms;
