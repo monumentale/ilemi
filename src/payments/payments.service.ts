@@ -103,8 +103,6 @@ export class PaymentsService {
     if (eventData.event === 'charge.success') {
       const reference = eventData.data.reference;
       // Implement the logic to handle the successful charge event
-      /////Finish this off on payment=> check if user has paid , check the current plan, then check if he should continue upload depending on the payment package
-
       const paymentref = await this.PaymentrefModel.findOne({ refrence_id: reference }).exec();
       if (!paymentref) {
         throw new NotFoundException('Paymentref not found');

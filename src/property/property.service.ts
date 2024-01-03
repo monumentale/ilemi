@@ -11,6 +11,16 @@ import { BaseResponseTypeDTO } from 'src/utils/utils.types';
 export class PropertyService {
     constructor(@InjectModel(Property.name) private propertyModel: Model<Property>, private readonly AgentSrv: AgentService,) { }
 
+    async countPropertiesByAgentId(agentId: string): Promise<number> {
+        try {
+            const count = await this.propertyModel.countDocuments({ AgentId: agentId });
+            return count;
+        } catch (error) {
+            // Handle errors here
+            throw new Error(error);
+        }
+    }
+
     async createProperty(createPropertyDto: CreatePropertyDto): Promise<Property> {
 
         /////  check if user has paid , check the current plan, then check if he should continue upload depending on the payment package
@@ -20,10 +30,32 @@ export class PropertyService {
             if (!agent) {
                 throw new NotFoundException('Agent not found');
             }
+            // throw new BadRequestException('Invalid video ID');
+            const NoOfPropertiesUploaded = await this.countPropertiesByAgentId(createPropertyDto.AgentId)
+            if (agent.data.CurrentPlanName === "free-plan") {
+                // Free Plan: 1 listing allowed, throw an error if NoOfPropertiesUploaded is greater than or equal to 1
+                if (NoOfPropertiesUploaded >= 1) {
+                    throw new NotFoundException('Free plan allows only 1 property listing.');
+                }
+            } else if (agent.data.CurrentPlanName === "SILVER") {
+                // SILVER Plan: 15 listings allowed, throw an error if NoOfPropertiesUploaded is greater than or equal to 15
+                if (NoOfPropertiesUploaded >= 15) {
+                    throw new NotFoundException('SILVER plan allows only 15 property listings.');
+                }
+            } else if (agent.data.CurrentPlanName === "GOLD") {
+                // GOLD Plan: 25 listings allowed, throw an error if NoOfPropertiesUploaded is greater than or equal to 25
+                if (NoOfPropertiesUploaded >= 25) {
+                    throw new NotFoundException('GOLD plan allows only 25 property listings.');
+                }
+            } else if (agent.data.CurrentPlanName === "PLATINUM") {
+                // PLATINUM Plan: Unlimited listings
+                console.log("Keep uploading until you get tired!");
+            } else {
+                throw new NotFoundException('Broo No Vex Craete Another Account ....Abeg 😂');
+            }
+
 
             await this.AgentSrv.updatePropertyDataCount(createPropertyDto.AgentId);
-
-
             const partialProperty: Partial<CreatePropertyDto> = {
                 ...createPropertyDto
             };
@@ -47,34 +79,34 @@ export class PropertyService {
 
     async searchProperty(searchTerm: string, skip: number, limit: number): Promise<any> {
         try {
-          const query = this.propertyModel.find({
-            $or: [
-              { StreetAddress: new RegExp(searchTerm, 'i') },
-              { City: new RegExp(searchTerm, 'i') },
-              { State: new RegExp(searchTerm, 'i') },
-              { Zipcode: new RegExp(searchTerm, 'i') },
-              { Representiing: new RegExp(searchTerm, 'i') },
-              { PropertyType: new RegExp(searchTerm, 'i') },
-              { Baths: parseInt(searchTerm) || 0 },
-              { BedRooms: parseInt(searchTerm) || 0 },
-              { MonthlyRent: parseFloat(searchTerm) || 0 },
-              { SquareFoot: parseFloat(searchTerm) || 0 },
-              { Description: new RegExp(searchTerm, 'i') },
-              // Add other fields as needed
-            ],
-          });
-      
-          // Apply skip and limit to the query
-          query.skip(skip).limit(limit);
-      
-          // Execute the query and return the result
-          return query.exec();
+            const query = this.propertyModel.find({
+                $or: [
+                    { StreetAddress: new RegExp(searchTerm, 'i') },
+                    { City: new RegExp(searchTerm, 'i') },
+                    { State: new RegExp(searchTerm, 'i') },
+                    { Zipcode: new RegExp(searchTerm, 'i') },
+                    { Representiing: new RegExp(searchTerm, 'i') },
+                    { PropertyType: new RegExp(searchTerm, 'i') },
+                    { Baths: parseInt(searchTerm) || 0 },
+                    { BedRooms: parseInt(searchTerm) || 0 },
+                    { MonthlyRent: parseFloat(searchTerm) || 0 },
+                    { SquareFoot: parseFloat(searchTerm) || 0 },
+                    { Description: new RegExp(searchTerm, 'i') },
+                    // Add other fields as needed
+                ],
+            });
+
+            // Apply skip and limit to the query
+            query.skip(skip).limit(limit);
+
+            // Execute the query and return the result
+            return query.exec();
         } catch (error) {
-          // Handle errors here
-          throw new Error(error);
+            // Handle errors here
+            throw new Error(error);
         }
-      }
-      
+    }
+
 
     // async updateConnectionsByCondition(jobId: string, updateFields: any): Promise<void> {
     //     try {
@@ -156,7 +188,7 @@ export class PropertyService {
             if (updatePropertyDto.PropertyType && updatePropertyDto.PropertyType !== property.PropertyType) {
                 property.PropertyType = updatePropertyDto.PropertyType;
             }
-            
+
 
             if (updatePropertyDto.BedRooms !== undefined && updatePropertyDto.BedRooms !== property.BedRooms) {
                 property.BedRooms = updatePropertyDto.BedRooms;
