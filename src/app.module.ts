@@ -8,6 +8,7 @@ import { AuthModule } from './auth/auth.module';
 import { AgentModule } from './agent/agent.module';
 import { PropertyModule } from './property/property.module';
 import { TenantModule } from './tenant/tenant.module';
+import { PaymentsModule } from './payments/payments.module';
 import * as dotenv from 'dotenv';
 
 
@@ -20,6 +21,7 @@ import * as dotenv from 'dotenv';
     AgentModule,
     PropertyModule,
     TenantModule,
+    PaymentsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -431,7 +431,7 @@ export const httpPost = async <U, T>(
   url: string,
   payload: T,
   headers = {},
-): Promise<U> => {
+): Promise<any> => {
   const response: AxiosResponse = await axios.post(url, payload, { headers });
   return response.data as U;
 };

@@ -431,6 +431,21 @@ export class AgentService {
   }
 
 
+  async getAndUpdateSubscriptionInfo(agentId: string, isSubscribed: boolean, currentPlanName: string, currentSubscriptionId: string): Promise<any> {
+    const agent = await this.AgentModel.findById(agentId).exec();
+
+    if (!agent) {
+      throw new NotFoundException('Agent not found');
+    }
+
+    agent.isSubscribed = isSubscribed;
+    agent.CurrentPlanName = currentPlanName;
+    agent.CurrentSubscriptionid = currentSubscriptionId;
+
+    return await agent.save();
+  }
+
+
   async deleteAgentById(id: string): Promise<Agent | null> {
     if (!mongoose.Types.ObjectId.isValid(id)) {
       throw new NotFoundException('Agent ID is not valid');

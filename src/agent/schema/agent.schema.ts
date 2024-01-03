@@ -21,6 +21,19 @@ export class Agent {
   @Prop({ required: false })
   externalUserId: string;
 
+  
+  @ApiProperty()
+  @Prop({ default: false })
+  isSubscribed:boolean;
+
+  @ApiProperty()
+  @Prop({ default: "free-plan" })
+  CurrentPlanName:string;
+
+  @ApiProperty()
+  @Prop({ default: "free" })
+  CurrentSubscriptionid:string;
+
   @ApiProperty()
   @Prop({ required: false })
   CompanyName: string;

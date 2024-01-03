@@ -12,6 +12,8 @@ export class PropertyService {
     constructor(@InjectModel(Property.name) private propertyModel: Model<Property>, private readonly AgentSrv: AgentService,) { }
 
     async createProperty(createPropertyDto: CreatePropertyDto): Promise<Property> {
+
+        /////  check if user has paid , check the current plan, then check if he should continue upload depending on the payment package
         try {
             // Check if the agent exists
             const agent = await this.AgentSrv.findAgentById(createPropertyDto.AgentId);
