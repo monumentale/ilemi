@@ -77,6 +77,12 @@ export class AgentDto {
     City: string;
 
     @ApiProperty()
+    CompanyName: string;
+  
+    @ApiProperty()
+    NINNumber: string;
+
+    @ApiProperty()
     NINback:UploadeImageDto;
 
     @ApiProperty()

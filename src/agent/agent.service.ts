@@ -363,6 +363,14 @@ export class AgentService {
         agent.City = updateAgentDto.City;
       }
 
+      if (updateAgentDto.NINNumber && updateAgentDto.NINNumber !== agent.NINNumber) {
+        agent.NINNumber = updateAgentDto.NINNumber;
+      }
+
+      if (updateAgentDto.CompanyName && updateAgentDto.CompanyName !== agent.CompanyName) {
+        agent.CompanyName = updateAgentDto.CompanyName;
+      }
+
       if (updateAgentDto.WhatsappNumber && updateAgentDto.WhatsappNumber !== agent.WhatsappNumber) {
         agent.WhatsappNumber = updateAgentDto.WhatsappNumber;
       }

@@ -22,6 +22,14 @@ export class Agent {
   externalUserId: string;
 
   @ApiProperty()
+  @Prop({ required: false })
+  CompanyName: string;
+
+  @ApiProperty()
+  @Prop({ required: false })
+  NINNumber: string;
+
+  @ApiProperty()
   @Prop({
     type: {
       Jan: { type: Number, default: 0 }, // Set the default value for Jan
