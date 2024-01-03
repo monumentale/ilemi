@@ -22,6 +22,10 @@ export class Property {
     Vacancy: Number;     //////   Vacant = 0   Occupied=   1
 
     @ApiProperty()
+    @Prop({ default: 0 })
+    TotalApplicants: Number;     //////   Vacant = 0   Occupied=   1
+
+    @ApiProperty()
     @Prop({ default: "ACTIVE" })
     status: String;   // ACTIVE  ARCHIVE  MAINTENANCE
 

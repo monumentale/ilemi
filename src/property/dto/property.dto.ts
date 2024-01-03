@@ -12,6 +12,14 @@ export class CreatePropertyDto {
   @ApiProperty({ description: 'Type of property', example: 'House' })
   Property_Name: string;
 
+
+  @ApiProperty({
+    description: 'Vacancy status (0 for Vacant, 1 for Occupied)',
+    example: 0,
+    default: 0, // Set default value to 0
+  })
+  TotalApplicants: Number; 
+
   @ApiProperty({ description: 'Vacancy status (0 for Vacant, 1 for Occupied)', example: 0 })
   Vacancy: number;
 

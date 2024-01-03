@@ -124,7 +124,6 @@ export class AgentController {
 
 
 
-
   @Put(':email')
   @ApiOperation({ summary: 'Update an Agent' })
   @ApiResponse({ status: HttpStatus.OK, description: 'Agent updated successfully', type: BaseResponseTypeDTO })
