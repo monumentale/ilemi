@@ -15,6 +15,14 @@ export class Property {
 
     @ApiProperty()
     @Prop()
+    Latitude: Number;
+
+    @ApiProperty()
+    @Prop()
+    Longitude: Number;
+
+    @ApiProperty()
+    @Prop()
     Property_Name: String;
 
     @ApiProperty()
@@ -143,14 +151,14 @@ export class Property {
     @ApiProperty()
     @Prop([
         {
-            Date:Date,
+            Date: Date,
             price: String,
             event: String,
             source: String,
         },
     ])
     PriceHistory: {
-        Date:Date,
+        Date: Date,
         price: String,
         event: String,
         source: String,
