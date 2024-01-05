@@ -14,7 +14,7 @@ import { verifyPasswordHash, generateUniqueKey, generateUniqueCode, sendEmail, h
 import mongoose from "mongoose";
 import { Query } from 'express-serve-static-core';
 import { Agent } from './schema/agent.schema';
-import { CreateAgentDto, AgentDto, ChangePasswordDTO } from './dto/agent.dto';
+import { CreateAgentDto, AgentDto, ChangePasswordDTO, UpdateAgentDto } from './dto/agent.dto';
 import { BaseResponseTypeDTO, UpdatePasswordDTO } from 'src/utils/utils.types';
 import { Property } from 'src/property/schema/property.schema';
 
@@ -335,15 +335,20 @@ export class AgentService {
   }
 
 
-  async update(updateAgentDto: AgentDto): Promise<BaseResponseTypeDTO> {
+  async update(updateAgentDto: UpdateAgentDto): Promise<BaseResponseTypeDTO> {
     try {
-      if (!updateAgentDto.email) {
-        throw new NotFoundException('Email is required for updating an agent');
+      if (!updateAgentDto.agentId) {
+        throw new NotFoundException('Agent ID is required for updating an agent');
       }
 
-      let agent = await this.AgentModel.findOne({ email: updateAgentDto.email });
+      let agent = await this.AgentModel.findOne({  _id: updateAgentDto.agentId });
       if (!agent?.id) {
-        throw new NotFoundException('Agent with email not found');
+        throw new NotFoundException('Agent with id not found');
+      }
+
+      // Check and update each agent field if provided in the DTO
+      if (updateAgentDto.email && updateAgentDto.email !== agent.email) {
+        agent.email = updateAgentDto.email;
       }
 
       // Check and update each agent field if provided in the DTO

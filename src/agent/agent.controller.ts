@@ -124,7 +124,7 @@ export class AgentController {
 
 
 
-  @Put(':email')
+  @Put('/update-agent')
   @ApiOperation({ summary: 'Update an Agent' })
   @ApiResponse({ status: HttpStatus.OK, description: 'Agent updated successfully', type: BaseResponseTypeDTO })
   @ApiBadRequestResponse({ description: 'Invalid request payload' })

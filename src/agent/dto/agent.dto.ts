@@ -134,6 +134,6 @@ export class AgentDto {
 }
 
 export class UpdateAgentDto extends AgentDto {
-    // @ApiProperty({ description: 'ID of the agent associated with the property' })
-    // propertyId: string;
+     @ApiProperty({ description: 'ID of the agent associated with the agent' })
+     agentId: string;
 }
