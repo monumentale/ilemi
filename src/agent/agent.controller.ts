@@ -4,6 +4,7 @@ import {
   ApiBearerAuth,
   ApiConsumes,
   ApiNotFoundResponse,
+  ApiOkResponse,
   ApiOperation,
   ApiParam,
   ApiProduces,
@@ -122,6 +123,24 @@ export class AgentController {
     }
   }
 
+
+
+  @Get('get-agent-by-id/:agentId')
+  @ApiOperation({ summary: 'Find agent by ID' })
+  @ApiParam({ name: 'agentId', description: 'ID of the agent' })
+  @ApiOkResponse({ description: 'Agent details' })
+  @ApiNotFoundResponse({ description: 'Agent not found' })
+  async findAgentById(@Param('agentId') agentId: string) {
+    try {
+      const agent = await this.AgentService.findAgentById(agentId);
+      return agent;
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw new NotFoundException(error.message);
+      }
+      throw error;
+    }
+  }
 
 
   @Put('/update-agent')
