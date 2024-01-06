@@ -27,11 +27,11 @@ export class Agent {
   isSubscribed:boolean;
 
   @ApiProperty()
-  @Prop({ default: "free-plan" })
+  @Prop({ default: "BASIC" })
   CurrentPlanName:string;
 
   @ApiProperty()
-  @Prop({ default: "free" })
+  @Prop({ default: "basic" })
   CurrentSubscriptionid:string;
 
   @ApiProperty()

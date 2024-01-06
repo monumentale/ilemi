@@ -18,10 +18,10 @@ export class PaymentsService {
 
   ////CRON_JOBS
   // 3- run cron jobs on 3 to see when they have expired and reset isSubscribed,CurrentSubscriptionid,CurrentPlanName
-  // @Prop({ default: "free-plan" })
+  // @Prop({ default: "BASIC" })
   // CurrentPlanName:string;
 
-  // @Prop({ default: "free" })
+  // @Prop({ default: "basic" })
   // CurrentSubscriptionid:string;
 
   async createPayment(payload: CreatePaymentDto) {

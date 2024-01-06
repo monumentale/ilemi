@@ -32,10 +32,10 @@ export class PropertyService {
             }
             // throw new BadRequestException('Invalid video ID');
             const NoOfPropertiesUploaded = await this.countPropertiesByAgentId(createPropertyDto.AgentId)
-            if (agent.data.CurrentPlanName === "free-plan") {
-                // Free Plan: 1 listing allowed, throw an error if NoOfPropertiesUploaded is greater than or equal to 1
+            if (agent.data.CurrentPlanName === "BASIC") {
+                // BASIC Plan: 1 listing allowed, throw an error if NoOfPropertiesUploaded is greater than or equal to 1
                 if (NoOfPropertiesUploaded >= 1) {
-                    throw new NotFoundException('Free plan allows only 1 property listing.');
+                    throw new NotFoundException('BASIC plan allows only 1 property listing.');
                 }
             } else if (agent.data.CurrentPlanName === "SILVER") {
                 // SILVER Plan: 15 listings allowed, throw an error if NoOfPropertiesUploaded is greater than or equal to 15
