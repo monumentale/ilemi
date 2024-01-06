@@ -9,10 +9,6 @@ export class Property {
     @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Agent' })
     AgentId: mongoose.Types.ObjectId;
 
-    // @ApiProperty()
-    // @Prop()
-    // status: boolean;
-
     @ApiProperty()
     @Prop()
     Latitude: Number;
@@ -31,7 +27,7 @@ export class Property {
 
     @ApiProperty()
     @Prop({ default: 0 })
-    TotalApplicants: Number;     //////   Vacant = 0   Occupied=   1
+    TotalApplicants: Number;
 
     @ApiProperty()
     @Prop({ default: "ACTIVE" })

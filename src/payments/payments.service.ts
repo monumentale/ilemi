@@ -128,6 +128,15 @@ export class PaymentsService {
     return { statusCode: HttpStatus.OK, message: 'Webhook received' };
   }
 
+
+  async getPaymentBySubscriptionId(subscriptionId: string): Promise<Payment> {
+    const payment = await this.PaymentModel.findOne({ subscriptionid: subscriptionId }).exec();
+    if (!payment) {
+      throw new NotFoundException('Payment not found');
+    }
+    return payment;
+  }
+
   async addDaysToCurrentDate(days: number): Promise<Date> {
     const currentDate = new Date();
     currentDate.setDate(currentDate.getDate() + days);
