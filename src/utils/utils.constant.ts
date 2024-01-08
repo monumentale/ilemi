@@ -41,6 +41,7 @@ export enum AuthProvider {
 export enum AppRole {
     ADMIN = 'ADMIN',
     AGENT = "AGENT",
+    TENANT="TENANT",
     EMPLOYER = 'USER',
     Agent = "Agent"
 }

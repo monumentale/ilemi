@@ -22,12 +22,12 @@ import { OTPUserDTO } from 'src/auth/dto/auth.dto';
 export class AgentController {
   constructor(private readonly AgentService: AgentService) { }
 
-  @ApiOperation({ description: 'create employe' })
+  @ApiOperation({ description: 'create agent' })
   @ApiProduces('json')
   @ApiConsumes('application/json')
   @Post()
-  create(@Body() createEmployerDto: CreateAgentDto) {
-    return this.AgentService.create(createEmployerDto);
+  create(@Body() createagentrDto: CreateAgentDto) {
+    return this.AgentService.create(createagentrDto);
   }
 
 
@@ -87,7 +87,7 @@ export class AgentController {
   @ApiProduces('json')
   @ApiConsumes('application/json')
   // @ApiBearerAuth('JWT')
-  // @Roles(AppRole.ADMIN,AppRole.EMPLOYER)
+  // @Roles(AppRole.ADMIN,AppRole.agentR)
   // @UseGuards(RolesGuard)
   @Post('/verification/change-password')
   async changePassword(
@@ -102,7 +102,7 @@ export class AgentController {
   @ApiConsumes('application/json')
   @Post('/change-password')
   @ApiBearerAuth('JWT')
-  // @Roles(AppRole.ADMIN, AppRole.EMPLOYER)
+  // @Roles(AppRole.ADMIN, AppRole.agentR)
   // @UseGuards(RolesGuard)
   async changePasswordAcc(
     @Body() payload: ChangePasswordDTO,
@@ -159,26 +159,26 @@ export class AgentController {
 
 
 
-  //  (CONTROLLER) DELETE REQUEST TO DELETE AN EMPLOYER IN THE DATABASE BY ID..........................................
-  @ApiOperation({ description: `Delete employer by Id` })
+  //  (CONTROLLER) DELETE REQUEST TO DELETE AN agentR IN THE DATABASE BY ID..........................................
+  @ApiOperation({ description: `Delete agentr by Id` })
   @ApiProduces('json')
   @ApiConsumes('application/json')
-  @Delete('/deleteemployer/:id')
+  @Delete('/deleteagentr/:id')
   // @ApiBearerAuth('JWT')
   // @Roles(AppRole.ADMIN)
   // @UseGuards(RolesGuard)
-  async deleteEmployer(@Param('id') id: string) {
+  async deleteagentr(@Param('id') id: string) {
     try {
-      const employee = await this.AgentService.deleteAgentById(id);
-      // If employee with the ID is not found;
-      if (!employee) {
-        throw new NotFoundException(`Employee with ID ${id} not found.`);
+      const agente = await this.AgentService.deleteAgentById(id);
+      // If agente with the ID is not found;
+      if (!agente) {
+        throw new NotFoundException(`agente with ID ${id} not found.`);
       }
-      // return this.employeeService.remove(+id);
-      return { message: `Employee with ID ${id} deleted.` };
+      // return this.agenteService.remove(+id);
+      return { message: `agente with ID ${id} deleted.` };
     } catch (error) {
       if (error instanceof NotFoundException) {
-        return { message: `Employee not found` };
+        return { message: `agente not found` };
       }
       throw error;
     }

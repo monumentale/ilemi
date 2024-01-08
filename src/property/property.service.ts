@@ -21,6 +21,7 @@ export class PropertyService {
         }
     }
 
+
     async createProperty(createPropertyDto: CreatePropertyDto): Promise<Property> {
 
         /////  check if user has paid , check the current plan, then check if he should continue upload depending on the payment package

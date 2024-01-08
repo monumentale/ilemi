@@ -36,4 +36,29 @@ export class AuthController {
   {
     return await this.authService.AgentsignUp(payload);
   }
+
+
+
+
+  @ApiOperation({ description: 'Login with email and password' })
+  @ApiProduces('json')
+  @ApiConsumes('application/json')
+  // @ApiResponse({ type: AuthResponseDTO })
+  @Post('/Tenantlogin')
+  async tenatlogin(@Body() payload: LoginUserDTO)
+  // : Promise<AuthResponseDTO> 
+  {
+    return await this.authService.Tenantlogin(payload);
+  }
+
+  @ApiOperation({ description: 'Sign Up with email and password' })
+  @ApiProduces('json')
+  @ApiConsumes('application/json')
+  // @ApiResponse({ type: AuthResponseDTO })
+  @Post('/TenantSignup')
+  async TenantsignUp(@Body() payload: SignUpDTO)
+  // : Promise<AuthResponseDTO> 
+  {
+    return await this.authService.TenantsignUp(payload);
+  }
 }

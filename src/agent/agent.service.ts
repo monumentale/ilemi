@@ -451,6 +451,9 @@ export class AgentService {
   }
 
 
+
+
+  ///////ALSO DELETE PROPERTY TENANT CONNECTION
   async deleteAgentById(id: string): Promise<Agent | null> {
     if (!mongoose.Types.ObjectId.isValid(id)) {
       throw new NotFoundException('Agent ID is not valid');
@@ -463,6 +466,8 @@ export class AgentService {
     // Delete related documents based on the agent's data
     // Assuming there's another model for the related documents, adjust accordingly
     const deletedJobs = await this.PropertyModel.deleteMany({ AgentId: agent.id });
+
+
     //  const deletedCandidates= await this.JobConnectionModel.deleteMany({ agent: agent.id });
     //  console.log(deletedCandidates)
     console.log(deletedJobs)
