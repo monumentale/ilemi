@@ -48,6 +48,29 @@ export class PropertyController {
     }
   }
 
+
+  @Get('statistics/:agentId')
+  @ApiOperation({ summary: 'Get Property Statistics for an Agent' })
+  @ApiParam({ name: 'agentId', description: 'Agent ID' })
+  async getPropertyStatistics(@Param('agentId') agentId: string) {
+    try {
+      const statistics = await this.propertyService.getPropertyStatistics(agentId);
+      return {
+        success: true,
+        code: 200,
+        data: statistics,
+        message: 'Property statistics retrieved successfully',
+      };
+    } catch (error) {
+      return {
+        success: false,
+        code: 500,
+        message: 'Internal Server Error',
+        error: error.message || error,
+      };
+    }
+  }
+
   @ApiOperation({ summary: 'Delete a property by ID' })
   @ApiParam({ name: 'id', description: 'Property ID', example: '123' })
   @ApiResponse({ status: 204, description: 'Property deleted successfully' })

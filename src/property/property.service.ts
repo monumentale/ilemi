@@ -78,6 +78,20 @@ export class PropertyService {
         return this.propertyModel.find({ AgentId: agentId }).populate("AgentId").exec();
     }
 
+    async getPropertyStatistics(agentId: string | mongoose.Types.ObjectId) {
+        // const properties = await this.propertyModel.find({ AgentId: agentId }).exec();
+        const totalProperties = await this.propertyModel.countDocuments({ AgentId: agentId }).exec();
+        const vacantProperties = await this.propertyModel.countDocuments({ AgentId: agentId, Vacancy: 0 }).exec();
+        const occupiedProperties = await this.propertyModel.countDocuments({ AgentId: agentId, Vacancy: 1 }).exec();
+    
+        return {
+        //   properties,
+          totalProperties,
+          vacantProperties,
+          occupiedProperties,
+        };
+      }
+
     async searchProperty(searchTerm: string, skip: number, limit: number): Promise<any> {
         try {
             const query = this.propertyModel.find({
