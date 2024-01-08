@@ -112,17 +112,22 @@ export class PropertyService {
     }
 
     async countPropertiesByMonth(agentId: string): Promise<any> {
+        const currentYear = new Date().getFullYear();
+
         const pipeline = [
             {
                 $match: {
                     AgentId: new mongoose.Types.ObjectId(agentId),
+                    CreationDate: {
+                        $gte: new Date(`${currentYear}-01-01T00:00:00.000Z`),
+                        $lt: new Date(`${currentYear + 1}-01-01T00:00:00.000Z`),
+                    },
                 },
             },
             {
                 $group: {
                     _id: {
                         month: { $month: { $toDate: '$CreationDate' } },
-                        year: { $year: { $toDate: '$CreationDate' } },
                     },
                     count: { $sum: 1 },
                     vacancy0: {
@@ -137,7 +142,6 @@ export class PropertyService {
 
         const result = await this.propertyModel.aggregate(pipeline);
 
-        console.log(result)
         const countByMonth = {};
         for (let month = 1; month <= 12; month++) {
             const monthKey = `${month}`;
@@ -147,9 +151,133 @@ export class PropertyService {
                 vacancy1: entry ? entry.vacancy1 || 0 : 0,
             };
         }
-
         return countByMonth;
     }
+
+
+    async countPropertiesByWeek(agentId: string): Promise<any> {
+        const today = new Date();
+        const startOfWeek = new Date(today);
+        startOfWeek.setDate(today.getDate() - today.getDay()); // Set to the first day (Sunday) of the current week
+
+        const endOfWeek = new Date(startOfWeek);
+        endOfWeek.setDate(startOfWeek.getDate() + 6); // Set to the last day (Saturday) of the current week
+
+        const pipeline = [
+            {
+                $match: {
+                    AgentId: new mongoose.Types.ObjectId(agentId),
+                    CreationDate: {
+                        $gte: startOfWeek,
+                        $lt: endOfWeek,
+                    },
+                },
+            },
+            {
+                $group: {
+                    _id: {
+                        dayOfWeek: { $dayOfWeek: { $toDate: '$CreationDate' } },
+                    },
+                    count: { $sum: 1 },
+                    vacancy0: {
+                        $sum: { $cond: [{ $eq: ['$Vacancy', 0] }, 1, 0] },
+                    },
+                    vacancy1: {
+                        $sum: { $cond: [{ $eq: ['$Vacancy', 1] }, 1, 0] },
+                    },
+                },
+            },
+        ];
+
+        const result = await this.propertyModel.aggregate(pipeline);
+
+        const countByDay = {};
+        for (let day = 1; day <= 7; day++) {
+            const dayKey = `${day}`;
+            const entry = result.find((item) => item._id.dayOfWeek === day);
+            countByDay[dayKey] = {
+                vacancy0: entry ? entry.vacancy0 || 0 : 0,
+                vacancy1: entry ? entry.vacancy1 || 0 : 0,
+            };
+        }
+
+        return countByDay;
+    }
+
+
+    // // Helper function to get the week number of a date
+    // getWeekNumber(date: Date): number {
+    //     const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+    //     const dayNum = d.getUTCDay() || 7;
+    //     d.setUTCDate(d.getUTCDate() + 4 - dayNum);
+    //     const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+    //     return Math.ceil(((d.getTime() - yearStart.getTime()) / 86400000 + 1) / 7);
+    // }
+
+    // // Helper function to get the first day of the week
+    // getFirstDayOfWeek(year: number, week: number): Date {
+    //     const januaryFirst = new Date(year, 0, 1);
+    //     const daysToMonday = januaryFirst.getDay() === 0 ? 1 : 8 - januaryFirst.getDay();
+    //     const firstMonday = new Date(januaryFirst);
+    //     firstMonday.setDate(januaryFirst.getDate() + daysToMonday);
+    //     const daysToAdd = (week - 1) * 7;
+    //     return new Date(firstMonday.setDate(firstMonday.getDate() + daysToAdd));
+    // }
+
+    // // Helper function to get the last day of the week
+    // getLastDayOfWeek(year: number, week: number): Date {
+    //     const firstDay = this.getFirstDayOfWeek(year, week);
+    //     return new Date(firstDay.setDate(firstDay.getDate() + 6));
+    // }
+
+    // async countPropertiesByWeek2(agentId: string): Promise<any> {
+    //     const currentDate = new Date();
+    //     const currentYear = currentDate.getFullYear();
+    //     const currentWeek = this.getWeekNumber(currentDate);
+
+    //     const pipeline = [
+    //         {
+    //             $match: {
+    //                 AgentId: new mongoose.Types.ObjectId(agentId),
+    //                 CreationDate: {
+    //                     $gte: this.getFirstDayOfWeek(currentYear, currentWeek),
+    //                     $lt: this.getLastDayOfWeek(currentYear, currentWeek),
+    //                 },
+    //             },
+    //         },
+    //         {
+    //             $group: {
+    //                 _id: {
+    //                     dayOfWeek: { $dayOfWeek: { $toDate: '$CreationDate' } },
+    //                 },
+    //                 count: { $sum: 1 },
+    //                 vacancy0: {
+    //                     $sum: { $cond: [{ $eq: ['$Vacancy', 0] }, 1, 0] },
+    //                 },
+    //                 vacancy1: {
+    //                     $sum: { $cond: [{ $eq: ['$Vacancy', 1] }, 1, 0] },
+    //                 },
+    //             },
+    //         },
+    //     ];
+
+    //     const result = await this.propertyModel.aggregate(pipeline);
+
+    //     const countByDayOfWeek = {};
+    //     for (let day = 1; day <= 7; day++) {
+    //         const dayKey = `${day}`;
+    //         const entry = result.find((item) => item._id.dayOfWeek === day);
+    //         countByDayOfWeek[dayKey] = {
+    //             vacancy0: entry ? entry.vacancy0 || 0 : 0,
+    //             vacancy1: entry ? entry.vacancy1 || 0 : 0,
+    //         };
+    //     }
+    //     return countByDayOfWeek;
+    // }
+
+
+
+
 
     async searchProperty(searchTerm: string, skip: number, limit: number): Promise<any> {
         try {

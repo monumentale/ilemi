@@ -56,6 +56,18 @@ export class PropertyController {
     return result;
   }
 
+  @Get('count-by-week/:agentId')
+  @ApiOperation({ summary: 'Count properties by week for a specific agent' })
+  @ApiParam({ name: 'agentId', description: 'Agent ID', type: 'string' })
+  @ApiResponse({
+      status: 200,
+      description: 'Returns counts for each weekday (Monday to Friday)',
+      type: Object,
+  })
+  async countPropertiesByWeek(@Param('agentId') agentId: string): Promise<any> {
+      return this.propertyService.countPropertiesByWeek(agentId);
+  }
+
 
   @Get('statistics/:agentId')
   @ApiOperation({ summary: 'Get Property Statistics for an Agent' })
