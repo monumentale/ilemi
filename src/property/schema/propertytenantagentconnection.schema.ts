@@ -20,6 +20,11 @@ export class Property {
     @ApiProperty()
     @Prop()
     ApplicationDate: Date;   
+
+    
+    @ApiProperty()
+    @Prop()
+    RentExpirationdate: Date;   
   
 }
 

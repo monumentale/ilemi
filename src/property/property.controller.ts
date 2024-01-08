@@ -60,26 +60,51 @@ export class PropertyController {
   @ApiOperation({ summary: 'Count properties by week for a specific agent' })
   @ApiParam({ name: 'agentId', description: 'Agent ID', type: 'string' })
   @ApiResponse({
-      status: 200,
-      description: 'Returns counts for each weekday (Monday to Friday)',
-      type: Object,
+    status: 200,
+    description: 'Returns counts for each weekday (Monday to Friday)',
+    type: Object,
   })
   async countPropertiesByWeek(@Param('agentId') agentId: string): Promise<any> {
-      return this.propertyService.countPropertiesByWeek(agentId);
+    return this.propertyService.countPropertiesByWeek(agentId);
   }
 
   @Get('count-by-last-week/:agentId')
   @ApiOperation({
-      summary: 'Count properties for the last week',
-      description: 'Count the number of properties for the specified agent from the previous week, categorized by vacancy status (0 or 1) for each day of the week.',
+    summary: 'Count properties for the last week',
+    description: 'Count the number of properties for the specified agent from the previous week, categorized by vacancy status (0 or 1) for each day of the week.',
   })
   @ApiParam({ name: 'agentId', description: 'Agent ID', type: 'string' })
   @ApiOkResponse({
-      description: 'Count of properties for the last week',
-      type: Object,
+    description: 'Count of properties for the last week',
+    type: Object,
   })
   async countPropertiesByLastWeek(@Param('agentId') agentId: string): Promise<any> {
-      return this.propertyService.countPropertiesByLastWeek(agentId);
+    return this.propertyService.countPropertiesByLastWeek(agentId);
+  }
+
+
+  @Get('countLast31Days/:agentId')
+  @ApiResponse({
+    status: 200,
+    description: 'Count properties for the last 31 days',
+  })
+  async countPropertiesLast31Days(@Param('agentId') agentId: string): Promise<any> {
+    try {
+      const countByDay = await this.propertyService.countPropertiesLast31Days(agentId);
+      return {
+        success: true,
+        code: 200,
+        data: countByDay,
+        message: 'Properties counted for the last 31 days',
+      };
+    } catch (error) {
+      return {
+        success: false,
+        code: 500,
+        message: 'Internal server error',
+        error: error.message,
+      };
+    }
   }
 
 

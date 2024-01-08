@@ -204,7 +204,24 @@ export class PropertyService {
         // Update existing days with actual counts
         for (const entry of result) {
             const day = entry._id.day;
-            const month = new Date(startOfWeek).toLocaleString('en', { month: 'short' });
+            const montht = entry._id.month;
+
+            const listOfMonths = {
+                1: 'Jan',
+                2: 'Feb',
+                3: 'Mar',
+                4: 'Apr',
+                5: 'May',
+                6: 'Jun',
+                7: 'Jul',
+                8: 'Aug',
+                9: 'Sep',
+                10: 'Oct',
+                11: 'Nov',
+                12: 'Dec'
+            }
+            var month = listOfMonths[montht];
+            // const month = new Date(startOfRange).toLocaleString('en', { month: 'short' });
             const dayKey = `${month} ${day}`;
 
             countByDay[dayKey] = {
@@ -214,6 +231,8 @@ export class PropertyService {
         }
         return countByDay;
     }
+
+
 
 
     async countPropertiesByLastWeek(agentId: string): Promise<any> {
@@ -266,7 +285,24 @@ export class PropertyService {
         // Update existing days with actual counts
         for (const entry of result) {
             const day = entry._id.day;
-            const month = new Date(startOfWeek).toLocaleString('en', { month: 'short' });
+            const montht = entry._id.month;
+
+            const listOfMonths = {
+                1: 'Jan',
+                2: 'Feb',
+                3: 'Mar',
+                4: 'Apr',
+                5: 'May',
+                6: 'Jun',
+                7: 'Jul',
+                8: 'Aug',
+                9: 'Sep',
+                10: 'Oct',
+                11: 'Nov',
+                12: 'Dec'
+            }
+            var month = listOfMonths[montht];
+            // const month = new Date(startOfRange).toLocaleString('en', { month: 'short' });
             const dayKey = `${month} ${day}`;
 
             countByDay[dayKey] = {
@@ -274,6 +310,94 @@ export class PropertyService {
                 vacancy1: entry.vacancy1 || 0,
             };
         }
+
+        return countByDay;
+    }
+
+
+    async countPropertiesLast31Days(agentId: string): Promise<any> {
+        const today = new Date();
+        const startOfRange = new Date(today);
+        startOfRange.setDate(today.getDate() - 30); // Set to 31 days ago from the current day
+
+        const endOfRange = new Date(today);
+
+        const pipeline = [
+            {
+                $match: {
+                    AgentId: new mongoose.Types.ObjectId(agentId),
+                    CreationDate: {
+                        $gte: startOfRange,
+                        $lt: endOfRange,
+                    },
+                },
+            },
+            {
+                $group: {
+                    _id: {
+                        day: { $dayOfMonth: { $toDate: '$CreationDate' } },
+                        month: { $month: { $toDate: '$CreationDate' } },
+                    },
+                    count: { $sum: 1 },
+                    vacancy0: {
+                        $sum: { $cond: [{ $eq: ['$Vacancy', 0] }, 1, 0] },
+                    },
+                    vacancy1: {
+                        $sum: { $cond: [{ $eq: ['$Vacancy', 1] }, 1, 0] },
+                    },
+                },
+            },
+        ];
+
+        const result = await this.propertyModel.aggregate(pipeline);
+        console.log(result)
+
+        const countByDay = {};
+
+        // Initialize countByDay with default values
+        for (let day = 0; day < 31; day++) {
+            const currentDay = new Date(startOfRange);
+            currentDay.setDate(startOfRange.getDate() + day);
+            const dayKey = currentDay.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+            countByDay[dayKey] = { vacancy0: 0, vacancy1: 0 };
+        }
+
+        // // Update existing days with actual counts
+        for (const entry of result) {
+            const day = entry._id.day;
+            const montht = entry._id.month;
+
+            const listOfMonths = {
+                1: 'Jan',
+                2: 'Feb',
+                3: 'Mar',
+                4: 'Apr',
+                5: 'May',
+                6: 'Jun',
+                7: 'Jul',
+                8: 'Aug',
+                9: 'Sep',
+                10: 'Oct',
+                11: 'Nov',
+                12: 'Dec'
+            }
+            var month = listOfMonths[montht];
+            // const month = new Date(startOfRange).toLocaleString('en', { month: 'short' });
+            const dayKey = `${month} ${day}`;
+
+            countByDay[dayKey] = {
+                vacancy0: entry.vacancy0 || 0,
+                vacancy1: entry.vacancy1 || 0,
+            };
+        }
+
+
+        // result.forEach((entry) => {
+        //     countByDay[entry._id.dayOfMonth] = {
+        //         vacancy0: entry.vacancy0 || 0,
+        //         vacancy1: entry.vacancy1 || 0,
+        //     };
+        // });
 
         return countByDay;
     }
