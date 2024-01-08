@@ -5,11 +5,14 @@ import { Property } from './schema/property.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import mongoose, { Model } from 'mongoose';
 import { BaseResponseTypeDTO } from 'src/utils/utils.types';
+import { TenantService } from 'src/tenant/tenant.service';
 
 
 @Injectable()
 export class PropertyService {
-    constructor(@InjectModel(Property.name) private propertyModel: Model<Property>, private readonly AgentSrv: AgentService,) { }
+    constructor(@InjectModel(Property.name) private propertyModel: Model<Property>,
+        private readonly AgentSrv: AgentService,
+        private readonly TenantSrv: TenantService,) { }
 
     async countPropertiesByAgentId(agentId: string): Promise<number> {
         try {
@@ -74,6 +77,22 @@ export class PropertyService {
         }
     }
 
+
+
+    async TenantApplyForProperty() {
+        ////// validate if tenent agent and property exits
+        ////// check if tenant has applied for the property
+        ////// check if property is vacant or noit 
+        //send mail and notification
+    }
+
+    async AgentApproveTenancyApllication() {
+        ///   set property vacancy to 1
+        //send mail and notification
+    }
+
+
+
     async getAllPropertiesByAgentId(agentId: string): Promise<any[]> {
         return this.propertyModel.find({ AgentId: agentId }).populate("AgentId").exec();
     }
@@ -83,14 +102,54 @@ export class PropertyService {
         const totalProperties = await this.propertyModel.countDocuments({ AgentId: agentId }).exec();
         const vacantProperties = await this.propertyModel.countDocuments({ AgentId: agentId, Vacancy: 0 }).exec();
         const occupiedProperties = await this.propertyModel.countDocuments({ AgentId: agentId, Vacancy: 1 }).exec();
-    
+
         return {
-        //   properties,
-          totalProperties,
-          vacantProperties,
-          occupiedProperties,
+            //   properties,
+            totalProperties,
+            vacantProperties,
+            occupiedProperties,
         };
-      }
+    }
+
+    async countPropertiesByMonth(agentId: string): Promise<any> {
+        const pipeline = [
+            {
+                $match: {
+                    AgentId: new mongoose.Types.ObjectId(agentId),
+                },
+            },
+            {
+                $group: {
+                    _id: {
+                        month: { $month: { $toDate: '$CreationDate' } },
+                        year: { $year: { $toDate: '$CreationDate' } },
+                    },
+                    count: { $sum: 1 },
+                    vacancy0: {
+                        $sum: { $cond: [{ $eq: ['$Vacancy', 0] }, 1, 0] },
+                    },
+                    vacancy1: {
+                        $sum: { $cond: [{ $eq: ['$Vacancy', 1] }, 1, 0] },
+                    },
+                },
+            },
+        ];
+
+        const result = await this.propertyModel.aggregate(pipeline);
+
+        console.log(result)
+        const countByMonth = {};
+        for (let month = 1; month <= 12; month++) {
+            const monthKey = `${month}`;
+            const entry = result.find((item) => item._id.month === month);
+            countByMonth[monthKey] = {
+                vacancy0: entry ? entry.vacancy0 || 0 : 0,
+                vacancy1: entry ? entry.vacancy1 || 0 : 0,
+            };
+        }
+
+        return countByMonth;
+    }
 
     async searchProperty(searchTerm: string, skip: number, limit: number): Promise<any> {
         try {

@@ -34,7 +34,7 @@ export class Property {
     status: String;   // ACTIVE  ARCHIVE  MAINTENANCE
 
     @ApiProperty()
-    @Prop()
+    @Prop({ default: Date.now }) // Set default to the current timestamp when the property is created
     CreationDate: Date;
 
     @ApiProperty()

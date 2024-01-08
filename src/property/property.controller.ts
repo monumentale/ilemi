@@ -48,6 +48,14 @@ export class PropertyController {
     }
   }
 
+  @Get('count-by-month/:agentId')
+  @ApiParam({ name: 'agentId', description: 'Agent ID', type: 'string', example: 'your-agent-id' })
+  @ApiResponse({ status: 200, description: 'Count of properties by month', type: Object })
+  async countPropertiesByMonth(@Param('agentId') agentId: string): Promise<any> {
+    const result = await this.propertyService.countPropertiesByMonth(agentId);
+    return result;
+  }
+
 
   @Get('statistics/:agentId')
   @ApiOperation({ summary: 'Get Property Statistics for an Agent' })
