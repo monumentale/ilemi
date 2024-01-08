@@ -2,7 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, Put, HttpStatus, Bad
 import { PropertyService } from './property.service';
 import { CreatePropertyDto, UpdatePropertyDto } from './dto/property.dto';
 import { Property } from './schema/property.schema';
-import { ApiBadRequestResponse, ApiBody, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBadRequestResponse, ApiBody, ApiOkResponse, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Properties')
 @Controller('property')
@@ -66,6 +66,20 @@ export class PropertyController {
   })
   async countPropertiesByWeek(@Param('agentId') agentId: string): Promise<any> {
       return this.propertyService.countPropertiesByWeek(agentId);
+  }
+
+  @Get('count-by-last-week/:agentId')
+  @ApiOperation({
+      summary: 'Count properties for the last week',
+      description: 'Count the number of properties for the specified agent from the previous week, categorized by vacancy status (0 or 1) for each day of the week.',
+  })
+  @ApiParam({ name: 'agentId', description: 'Agent ID', type: 'string' })
+  @ApiOkResponse({
+      description: 'Count of properties for the last week',
+      type: Object,
+  })
+  async countPropertiesByLastWeek(@Param('agentId') agentId: string): Promise<any> {
+      return this.propertyService.countPropertiesByLastWeek(agentId);
   }
 
 

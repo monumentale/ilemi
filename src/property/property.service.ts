@@ -176,7 +176,69 @@ export class PropertyService {
             {
                 $group: {
                     _id: {
-                        dayOfWeek: { $dayOfWeek: { $toDate: '$CreationDate' } },
+                        day: { $dayOfMonth: { $toDate: '$CreationDate' } },
+                        month: { $month: { $toDate: '$CreationDate' } },
+                    },
+                    count: { $sum: 1 },
+                    vacancy0: {
+                        $sum: { $cond: [{ $eq: ['$Vacancy', 0] }, 1, 0] },
+                    },
+                    vacancy1: {
+                        $sum: { $cond: [{ $eq: ['$Vacancy', 1] }, 1, 0] },
+                    },
+                },
+            },
+        ];
+
+        const result = await this.propertyModel.aggregate(pipeline);
+        const countByDay = {};
+
+        // Initialize countByDay with default values
+        for (let day = 0; day < 7; day++) {
+            const currentDay = new Date(startOfWeek);
+            currentDay.setDate(startOfWeek.getDate() + day);
+            const dayKey = currentDay.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+            countByDay[dayKey] = { vacancy0: 0, vacancy1: 0 };
+        }
+
+        // Update existing days with actual counts
+        for (const entry of result) {
+            const day = entry._id.day;
+            const month = new Date(startOfWeek).toLocaleString('en', { month: 'short' });
+            const dayKey = `${month} ${day}`;
+
+            countByDay[dayKey] = {
+                vacancy0: entry.vacancy0 || 0,
+                vacancy1: entry.vacancy1 || 0,
+            };
+        }
+        return countByDay;
+    }
+
+
+    async countPropertiesByLastWeek(agentId: string): Promise<any> {
+        const today = new Date();
+        const endOfWeek = new Date(today);
+        endOfWeek.setDate(today.getDate() - today.getDay() - 1); // Set to the last day (Saturday) of the previous week
+
+        const startOfWeek = new Date(endOfWeek);
+        startOfWeek.setDate(endOfWeek.getDate() - 6); // Set to the first day (Sunday) of the previous week
+
+        const pipeline = [
+            {
+                $match: {
+                    AgentId: new mongoose.Types.ObjectId(agentId),
+                    CreationDate: {
+                        $gte: startOfWeek,
+                        $lt: endOfWeek,
+                    },
+                },
+            },
+            {
+                $group: {
+                    _id: {
+                        day: { $dayOfMonth: { $toDate: '$CreationDate' } },
+                        month: { $month: { $toDate: '$CreationDate' } },
                     },
                     count: { $sum: 1 },
                     vacancy0: {
@@ -192,18 +254,79 @@ export class PropertyService {
         const result = await this.propertyModel.aggregate(pipeline);
 
         const countByDay = {};
-        for (let day = 1; day <= 7; day++) {
-            const dayKey = `${day}`;
-            const entry = result.find((item) => item._id.dayOfWeek === day);
+
+        // Initialize countByDay with default values
+        for (let day = 0; day < 7; day++) {
+            const currentDay = new Date(startOfWeek);
+            currentDay.setDate(startOfWeek.getDate() + day);
+            const dayKey = currentDay.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+            countByDay[dayKey] = { vacancy0: 0, vacancy1: 0 };
+        }
+
+        // Update existing days with actual counts
+        for (const entry of result) {
+            const day = entry._id.day;
+            const month = new Date(startOfWeek).toLocaleString('en', { month: 'short' });
+            const dayKey = `${month} ${day}`;
+
             countByDay[dayKey] = {
-                vacancy0: entry ? entry.vacancy0 || 0 : 0,
-                vacancy1: entry ? entry.vacancy1 || 0 : 0,
+                vacancy0: entry.vacancy0 || 0,
+                vacancy1: entry.vacancy1 || 0,
             };
         }
 
         return countByDay;
     }
 
+
+    // async countPropertiesByWeek(agentId: string): Promise<any> {
+    //     const today = new Date();
+    //     const startOfWeek = new Date(today);
+    //     startOfWeek.setDate(today.getDate() - today.getDay()); // Set to the first day (Sunday) of the current week
+
+    //     const endOfWeek = new Date(startOfWeek);
+    //     endOfWeek.setDate(startOfWeek.getDate() + 6); // Set to the last day (Saturday) of the current week
+
+    //     const pipeline = [
+    //         {
+    //             $match: {
+    //                 AgentId: new mongoose.Types.ObjectId(agentId),
+    //                 CreationDate: {
+    //                     $gte: startOfWeek,
+    //                     $lt: endOfWeek,
+    //                 },
+    //             },
+    //         },
+    //         {
+    //             $group: {
+    //                 _id: {
+    //                     dayOfWeek: { $dayOfWeek: { $toDate: '$CreationDate' } },
+    //                 },
+    //                 count: { $sum: 1 },
+    //                 vacancy0: {
+    //                     $sum: { $cond: [{ $eq: ['$Vacancy', 0] }, 1, 0] },
+    //                 },
+    //                 vacancy1: {
+    //                     $sum: { $cond: [{ $eq: ['$Vacancy', 1] }, 1, 0] },
+    //                 },
+    //             },
+    //         },
+    //     ];
+
+    //     const result = await this.propertyModel.aggregate(pipeline);
+
+    //     const countByDay = {};
+    //     for (let day = 1; day <= 7; day++) {
+    //         const dayKey = `${day}`;
+    //         const entry = result.find((item) => item._id.dayOfWeek === day);
+    //         countByDay[dayKey] = {
+    //             vacancy0: entry ? entry.vacancy0 || 0 : 0,
+    //             vacancy1: entry ? entry.vacancy1 || 0 : 0,
+    //         };
+    //     }
+
+    //     return countByDay;
+    // }
 
     // // Helper function to get the week number of a date
     // getWeekNumber(date: Date): number {
