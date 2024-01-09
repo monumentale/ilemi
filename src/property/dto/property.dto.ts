@@ -106,7 +106,6 @@ export class CreatePropertyDto {
   @Type(() => PriceHistoryDto)
   PriceHistory: PriceHistoryDto[];
 
-
 }
 
 class PriceHistoryDto{

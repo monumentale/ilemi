@@ -25,6 +25,17 @@ export class Property {
     @ApiProperty()
     @Prop()
     RentExpirationdate: Date;   
+
+    @ApiProperty()
+    @Prop()
+    VehiclesOnPremises: Boolean;   
+
+    @ApiProperty()
+    @Prop()
+    OtherPeopleLivingInTheProperty: Boolean;   
+
+    // "VehiclesOnPremises": true,
+    // "OtherPeopleLivingInTheProperty": true,
   
 }
 

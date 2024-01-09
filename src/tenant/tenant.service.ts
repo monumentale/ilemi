@@ -301,15 +301,96 @@ export class TenantService {
         throw new NotFoundException('Tenant with id not found');
       }
 
-      // Check and update each Tenant field if provided in the DTO
-      if (updateTenantDto.email && updateTenantDto.email !== Tenant.email) {
-        Tenant.email = updateTenantDto.email;
-      }
+     // Check and update each Tenant field if provided in the DTO
+     if (updateTenantDto.email !== undefined && updateTenantDto.email !==Tenant.email) {
+     Tenant.email = updateTenantDto.email;
+    }
 
-      // Check and update each Tenant field if provided in the DTO
-      if (updateTenantDto.firstName && updateTenantDto.firstName !== Tenant.firstName) {
-        Tenant.firstName = updateTenantDto.firstName;
-      }
+    if (updateTenantDto.firstName !== undefined && updateTenantDto.firstName !==Tenant.firstName) {
+     Tenant.firstName = updateTenantDto.firstName;
+    }
+
+    if (updateTenantDto.lastName !== undefined && updateTenantDto.lastName !==Tenant.lastName) {
+     Tenant.lastName = updateTenantDto.lastName;
+    }
+
+    if (updateTenantDto.status !== undefined && updateTenantDto.status !==Tenant.status) {
+     Tenant.status = updateTenantDto.status;
+    }
+
+    
+    if (updateTenantDto.profilePic !== undefined && updateTenantDto.profilePic !==Tenant.profilePic) {
+      Tenant.profilePic = updateTenantDto.profilePic;
+     }
+
+    if (updateTenantDto.phoneNumber !== undefined && updateTenantDto.phoneNumber !==Tenant.phoneNumber) {
+     Tenant.phoneNumber = updateTenantDto.phoneNumber;
+    }
+
+    if (updateTenantDto.externalUserId !== undefined && updateTenantDto.externalUserId !==Tenant.externalUserId) {
+     Tenant.externalUserId = updateTenantDto.externalUserId;
+    }
+
+    if (updateTenantDto.uniqueVerificationCode !== undefined && updateTenantDto.uniqueVerificationCode !==Tenant.uniqueVerificationCode) {
+     Tenant.uniqueVerificationCode = updateTenantDto.uniqueVerificationCode;
+    }
+
+    if (updateTenantDto.ResidencyStatus !== undefined && updateTenantDto.ResidencyStatus !==Tenant.ResidencyStatus) {
+     Tenant.ResidencyStatus = updateTenantDto.ResidencyStatus;
+    }
+
+    if (updateTenantDto.AdditionalComments !== undefined && updateTenantDto.AdditionalComments !==Tenant.AdditionalComments) {
+     Tenant.AdditionalComments = updateTenantDto.AdditionalComments;
+    }
+
+    if (updateTenantDto.VehiclesOnPremises !== undefined && updateTenantDto.VehiclesOnPremises !==Tenant.VehiclesOnPremises) {
+     Tenant.VehiclesOnPremises = updateTenantDto.VehiclesOnPremises;
+    }
+
+    if (updateTenantDto.OtherPeopleLivingInTheProperty !== undefined && updateTenantDto.OtherPeopleLivingInTheProperty !==Tenant.OtherPeopleLivingInTheProperty) {
+     Tenant.OtherPeopleLivingInTheProperty = updateTenantDto.OtherPeopleLivingInTheProperty;
+    }
+
+
+    if (updateTenantDto.ApplicantPersonalDetails !== undefined && updateTenantDto.ApplicantPersonalDetails !==Tenant.ApplicantPersonalDetails) {
+      Tenant.ApplicantPersonalDetails = updateTenantDto.ApplicantPersonalDetails;
+     }
+
+     if (updateTenantDto.PersonalRefrenceDetails !== undefined && updateTenantDto.PersonalRefrenceDetails !==Tenant.PersonalRefrenceDetails) {
+      Tenant.PersonalRefrenceDetails = updateTenantDto.PersonalRefrenceDetails;
+     }
+
+     if (updateTenantDto.PreviousLivingArrangments !== undefined && updateTenantDto.PreviousLivingArrangments !==Tenant.PreviousLivingArrangments) {
+      Tenant.PreviousLivingArrangments = updateTenantDto.PreviousLivingArrangments;
+     }
+
+     if (updateTenantDto.CurrentLivingArrangments !== undefined && updateTenantDto.CurrentLivingArrangments !==Tenant.CurrentLivingArrangments) {
+      Tenant.CurrentLivingArrangments = updateTenantDto.CurrentLivingArrangments;
+     }
+
+     if (updateTenantDto.EmploymentStatus !== undefined && updateTenantDto.EmploymentStatus !==Tenant.EmploymentStatus) {
+      Tenant.EmploymentStatus = updateTenantDto.EmploymentStatus;
+     }
+
+     if (updateTenantDto.EmploymentRefrence !== undefined && updateTenantDto.EmploymentRefrence !==Tenant.EmploymentRefrence) {
+      Tenant.EmploymentRefrence = updateTenantDto.EmploymentRefrence;
+     }
+
+    if (updateTenantDto.GroupA !== undefined && updateTenantDto.GroupA !==Tenant.GroupA) {
+     Tenant.GroupA = updateTenantDto.GroupA;
+    }
+
+    if (updateTenantDto.GroupB !== undefined && updateTenantDto.GroupB !==Tenant.GroupB) {
+      Tenant.GroupB = updateTenantDto.GroupB;
+     }
+
+     if (updateTenantDto.GroupC !== undefined && updateTenantDto.GroupC !==Tenant.GroupC) {
+      Tenant.GroupC = updateTenantDto.GroupC;
+     }
+
+     if (updateTenantDto.SupportingDocuments !== undefined && updateTenantDto.SupportingDocuments !==Tenant.SupportingDocuments) {
+      Tenant.SupportingDocuments = updateTenantDto.SupportingDocuments;
+     }
 
 
       const saveTenat = await Tenant.save();

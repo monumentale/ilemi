@@ -6,7 +6,7 @@ import { ApiBadRequestResponse, ApiBearerAuth, ApiConsumes, ApiNotFoundResponse,
 import { BaseResponseTypeDTO, UpdatePasswordDTO } from 'src/utils/utils.types';
 
 
-@ApiTags('Tenat')
+@ApiTags('Tenants')
 @Controller('tenant')
 export class TenantController {
   constructor(private readonly tenantService: TenantService) {}

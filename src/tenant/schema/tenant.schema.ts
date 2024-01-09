@@ -47,18 +47,55 @@ export class Tenant {
     @Prop({ required: false })
     uniqueVerificationCode: string
 
+    @ApiProperty()
+    @Prop({ required: false })
+    ResidencyStatus: string
+
+    @ApiProperty()
+    @Prop({ required: false })
+    AdditionalComments: string
+
+    @ApiProperty()
+    @Prop({ required: false, default: false })
+    VehiclesOnPremises: boolean
+
+    @ApiProperty()
+    @Prop({ required: false, default: false })
+    OtherPeopleLivingInTheProperty: boolean
+
+    @ApiProperty()
+    @Prop()
+    profilePic: string;
+
+
+
 
     ///////////////////////Objects//////////////////////////////
     @ApiProperty()
     @Prop({
         type: {
+            title: String,
             name: String,
-            url: String,
+            dateofbirth: String,
+            email: String,
+            phoneNumber: String,
+            DriversLicenceNumber: String,
+            DriversLicenceState: String,
+            NINNumber: String,
+            HavingPet: Boolean,
+
         },
     })
     ApplicantPersonalDetails: {
-        name: string,
-        url: string
+        title: String,
+        name: String,
+        dateofbirth: String,
+        email: String,
+        phoneNumber: String,
+        DriversLicenceNumber: String,
+        DriversLicenceState: String,
+        NINNumber: String,
+        HavingPet: Boolean,
     };
 
 
@@ -66,13 +103,22 @@ export class Tenant {
     @ApiProperty()
     @Prop({
         type: {
-            name: String,
-            url: String,
+            Fullname: String,
+            Relationship: String,
+            howManyYearsKnown: String,
+            howManyMonthsKnown: String,
+            email: String,
+            PhoneNumber: String,
+
         },
     })
     PersonalRefrenceDetails: {
-        name: string,
-        url: string
+        Fullname: String,
+        Relationship: String,
+        howManyYearsKnown: String,
+        howManyMonthsKnown: String,
+        email: String,
+        PhoneNumber: String,
     };
 
 
@@ -80,13 +126,37 @@ export class Tenant {
     @ApiProperty()
     @Prop({
         type: {
-            name: String,
-            url: String,
+            EmploymentStatus: String,
+            BussinessName: String,
+            BussinessPhone: String,
+            BussinessAddress: String,
+            LGA: String,
+            Zipcode: String,
+            State: String,
+            Country: String,
+            EmploymentPosition: String,
+            CurrentlyEmployedHere: Boolean,
+            StarDate: Date,
+            EndDate: Date,
+            EmploymentType: String,
+            GrossAnnualIncome: Number,
         },
     })
     EmploymentStatus: {
-        name: string,
-        url: string
+        EmploymentStatus: String,
+        BussinessName: String,
+        BussinessPhone: String,
+        BussinessAddress: String,
+        LGA: String,
+        Zipcode: String,
+        State: String,
+        Country: String,
+        EmploymentPosition: String,
+        CurrentlyEmployedHere: Boolean,
+        StarDate: Date,
+        EndDate: Date,
+        EmploymentType: String,
+        GrossAnnualIncome: Number,
     };
 
 
@@ -94,13 +164,17 @@ export class Tenant {
     @ApiProperty()
     @Prop({
         type: {
-            name: String,
-            url: String,
+            SupervisorOrHrName: String,
+            SupervisorPosition: String,
+            phone: String,
+            email: String,
         },
     })
     EmploymentRefrence: {
-        name: string,
-        url: string
+        SupervisorOrHrName: String,
+        SupervisorPosition: String,
+        phone: String,
+        email: String,
     };
 
 
@@ -108,13 +182,37 @@ export class Tenant {
     @ApiProperty()
     @Prop({
         type: {
-            name: String,
-            url: String,
+            LivingArrangements: String,
+            ResidentialAddress: String,
+            suburb: String,
+            PostCode: String,
+            State: String,
+            Country: String,
+            PhoneNumber: String,
+            Email: String,
+            CurrentlyLivingHere: Boolean,
+            OnPeriodicLeave: Boolean,
+            StartDate: Date,
+            EndDate: Date,
+            LeaseEndDate: Date,
+            ReasonsForLeaving: String,
         },
     })
     CurrentLivingArrangments: {
-        name: string,
-        url: string
+        LivingArrangements: String,
+        ResidentialAddress: String,
+        suburb: String,
+        PostCode: String,
+        State: String,
+        Country: String,
+        PhoneNumber: String,
+        Email: String,
+        CurrentlyLivingHere: Boolean,
+        OnPeriodicLeave: Boolean,
+        StartDate: Date,
+        EndDate: Date,
+        LeaseEndDate: Date,
+        ReasonsForLeaving: String,
     };
 
 
@@ -122,13 +220,37 @@ export class Tenant {
     @ApiProperty()
     @Prop({
         type: {
-            name: String,
-            url: String,
+            LivingArrangements: String,
+            ResidentialAddress: String,
+            suburb: String,
+            PostCode: String,
+            State: String,
+            Country: String,
+            PhoneNumber: String,
+            Email: String,
+            CurrentlyLivingHere: Boolean,
+            OnPeriodicLeave: Boolean,
+            StartDate: Date,
+            EndDate: Date,
+            LeaseEndDate: Date,
+            ReasonsForLeaving: String,
         },
     })
     PreviousLivingArrangments: {
-        name: string,
-        url: string
+        LivingArrangements: String,
+        ResidentialAddress: String,
+        suburb: String,
+        PostCode: String,
+        State: String,
+        Country: String,
+        PhoneNumber: String,
+        Email: String,
+        CurrentlyLivingHere: Boolean,
+        OnPeriodicLeave: Boolean,
+        StartDate: Date,
+        EndDate: Date,
+        LeaseEndDate: Date,
+        ReasonsForLeaving: String,
     };
 
 

@@ -79,11 +79,16 @@ export class PropertyService {
 
 
 
+
+
     async TenantApplyForProperty() {
         ////// validate if tenent agent and property exits
         ////// check if tenant has applied for the property
-        ////// check if property is vacant or noit 
+        ////// check if property is vacant or not
         //send mail and notification
+        //increament TotalApplicants by 1
+        // "VehiclesOnPremises": true,
+        // "OtherPeopleLivingInTheProperty": true,
     }
 
     async AgentApproveTenancyApllication() {
@@ -93,10 +98,13 @@ export class PropertyService {
 
 
 
+
+
+
     async getAllPropertiesByAgentId(agentId: string): Promise<any[]> {
         return this.propertyModel.find({ AgentId: agentId })
-        // .populate("AgentId")
-        .exec();
+            // .populate("AgentId")
+            .exec();
     }
 
     async getPropertyStatistics(agentId: string | mongoose.Types.ObjectId) {
