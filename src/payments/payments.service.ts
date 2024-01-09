@@ -42,6 +42,21 @@ export class PaymentsService {
         name: "PLATINUM",
         Amount: 5000
       }
+    } else if (payload.planNumber === 4) {
+      plan = {
+        name: "SILVER",
+        Amount: 25000
+      }
+    } else if (payload.planNumber === 5) {
+      plan = {
+        name: "GOLD",
+        Amount: 37000
+      }
+    }else if (payload.planNumber === 6) {
+      plan = {
+        name: "PLATINUM",
+        Amount: 55000
+      }
     } else {
       throw new ForbiddenException('invalid plan number was selected');
     }
